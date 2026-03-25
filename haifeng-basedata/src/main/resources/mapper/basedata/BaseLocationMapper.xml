@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haifeng.basedata.mapper.BaseLocationMapper">
+    <resultMap id="BaseLocationResult" type="com.haifeng.basedata.domain.BaseLocation">
+        <id property="id" column="id"/>
+        <result property="locationCode" column="location_code"/>
+        <result property="locationName" column="location_name"/>
+        <result property="locationStatus" column="location_status"/>
+        <result property="length" column="length"/>
+        <result property="width" column="width"/>
+        <result property="height" column="height"/>
+        <result property="weight" column="weight"/>
+        <result property="row" column="row"/>
+        <result property="column" column="column"/>
+        <result property="layer" column="layer"/>
+        <result property="floorCode" column="floor_code"/>
+        <result property="allowContainerModel" column="allow_container_model"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="visualAreaCode" column="visual_area_code"/>
+        
+        <result property="stationCode" column="station_code"/>
+        <result property="areaName" column="area_name"/>
+        <result property="aisleCode" column="aisle_code"/>
+    </resultMap>
+
+    <select id="selectLocationList" resultMap="BaseLocationResult">
+        SELECT
+            l.*,
+            s.station_code,
+            a.area_name
+        FROM base_location l
+        LEFT JOIN base_location_station ls ON l.id = ls.location_id
+        LEFT JOIN base_station s ON ls.station_id = s.id AND s.del_flag = '0'
+        LEFT JOIN base_area a ON l.area_code = a.area_code AND a.del_flag = '0'
+        <where>
+            l.del_flag = '0'
+            <if test="location.locationCode != null and location.locationCode != ''">
+                AND l.location_code LIKE concat('%', #{location.locationCode}, '%')
+            </if>
+            <if test="location.locationName != null and location.locationName != ''">
+                AND l.location_name LIKE concat('%', #{location.locationName}, '%')
+            </if>
+            <if test="location.areaCode != null and location.areaCode != ''">
+                AND l.area_code LIKE concat('%', #{location.areaCode}, '%')
+            </if>
+            <if test="location.areaName != null and location.areaName != ''">
+                AND a.area_name LIKE concat('%', #{location.areaName}, '%')
+            </if>
+            <if test="location.stationCode != null and location.stationCode != ''">
+                AND s.station_code LIKE concat('%', #{location.stationCode}, '%')
+            </if>
+            <if test="location.aisleCode != null and location.aisleCode != ''">
+                AND l.aisle_code LIKE concat('%', #{location.aisleCode}, '%')
+            </if>
+            <if test="location.row != null">
+                AND l.`row` = #{location.row}
+            </if>
+            <if test="location.column != null">
+                AND l.`column` = #{location.column}
+            </if>
+            <if test="location.layer != null">
+                AND l.layer = #{location.layer}
+            </if>
+        </where>
+        order by l.create_time desc
+    </select>
+</mapper>

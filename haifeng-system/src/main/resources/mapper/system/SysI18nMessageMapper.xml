@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haifeng.system.mapper.SysI18nMessageMapper">
+
+    <resultMap type="SysI18nMessage" id="SysI18nMessageResult">
+        <result property="messageId" column="message_id"/>
+        <result property="messageKey" column="message_key"/>
+        <result property="messageValue" column="message_value"/>
+        <result property="languageCode" column="language_code"/>
+        <result property="category" column="category"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectMessageVo">
+        select message_id, message_key, message_value, language_code, category, status, remark, create_by, create_time, update_by, update_time
+        from sys_i18n_message
+    </sql>
+
+    <select id="selectMessageList" parameterType="SysI18nMessage" resultMap="SysI18nMessageResult">
+        <include refid="selectMessageVo"/>
+        <where>
+            <if test="messageKey != null and messageKey != ''">
+                and message_key like concat('%', #{messageKey}, '%')
+            </if>
+            <if test="languageCode != null and languageCode != ''">
+                and language_code = #{languageCode}
+            </if>
+            <if test="category != null and category != ''">
+                and category = #{category}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        order by language_code asc, category asc, message_key asc
+    </select>
+
+    <select id="selectMessageById" parameterType="Long" resultMap="SysI18nMessageResult">
+        <include refid="selectMessageVo"/>
+        where message_id = #{messageId}
+    </select>
+
+    <select id="selectMessageByKeyAndLanguage" resultMap="SysI18nMessageResult">
+        <include refid="selectMessageVo"/>
+        where message_key = #{messageKey} and language_code = #{languageCode} and status = 1
+    </select>
+
+    <select id="selectMessagesByLanguage" resultMap="SysI18nMessageResult">
+        <include refid="selectMessageVo"/>
+        where language_code = #{languageCode} and status = 1
+        order by category asc, message_key asc
+    </select>
+
+    <select id="selectMessagesByLanguageAndCategory" resultMap="SysI18nMessageResult">
+        <include refid="selectMessageVo"/>
+        where language_code = #{languageCode} and category = #{category} and status = 1
+        order by message_key asc
+    </select>
+
+    <select id="selectEnabledMessages" resultMap="SysI18nMessageResult">
+        <include refid="selectMessageVo"/>
+        where status = 1
+        order by language_code asc, category asc, message_key asc
+    </select>
+
+    <insert id="insertMessage" parameterType="SysI18nMessage" useGeneratedKeys="true" keyProperty="messageId">
+        insert into sys_i18n_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="messageKey != null">message_key,</if>
+            <if test="messageValue != null">message_value,</if>
+            <if test="languageCode != null">language_code,</if>
+            <if test="category != null">category,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="messageKey != null">#{messageKey},</if>
+            <if test="messageValue != null">#{messageValue},</if>
+            <if test="languageCode != null">#{languageCode},</if>
+            <if test="category != null">#{category},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMessage" parameterType="SysI18nMessage">
+        update sys_i18n_message
+        <trim prefix="set" suffixOverrides=",">
+            <if test="messageKey != null">message_key = #{messageKey},</if>
+            <if test="messageValue != null">message_value = #{messageValue},</if>
+            <if test="languageCode != null">language_code = #{languageCode},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where message_id = #{messageId}
+    </update>
+
+    <delete id="deleteMessageById" parameterType="Long">
+        delete from sys_i18n_message where message_id = #{messageId}
+    </delete>
+
+    <delete id="deleteMessageByIds" parameterType="Long">
+        delete from sys_i18n_message where message_id in
+        <foreach collection="array" item="messageId" open="(" separator="," close=")">
+            #{messageId}
+        </foreach>
+    </delete>
+
+    <select id="checkMessageExists" resultType="int">
+        select count(1) from sys_i18n_message where message_key = #{messageKey} and language_code = #{languageCode}
+    </select>
+
+    <insert id="batchInsertMessages" parameterType="java.util.List">
+        insert into sys_i18n_message (message_key, message_value, language_code, category, status, create_by, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.messageKey}, #{item.messageValue}, #{item.languageCode}, #{item.category}, #{item.status}, #{item.createBy}, #{item.createTime})
+        </foreach>
+    </insert>
+
+    <select id="selectMessagesAsMap" resultType="java.util.HashMap">
+        select message_key as `key`, message_value as `value`
+        from sys_i18n_message
+        where message_key in
+        <foreach collection="messageKeys" item="key" open="(" separator="," close=")">
+            #{key}
+        </foreach>
+        and language_code = #{languageCode}
+        and status = 1
+    </select>
+
+</mapper>

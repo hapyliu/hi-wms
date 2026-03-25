@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haifeng.basedata.mapper.BaseMaterialMapper">
+    
+    <!-- 物料查询结果映射 -->
+    <resultMap id="BaseMaterialResult" type="com.haifeng.basedata.domain.BaseMaterial">
+        <id property="id" column="id" />
+        <result property="materialCode" column="material_code" />
+        <result property="materialName" column="material_name" />
+        <result property="barCode" column="bar_code" />
+        <result property="categoryId" column="category_id" />
+        <result property="categoryName" column="category_name" />
+        <result property="specification" column="specification" />
+        <result property="unit" column="unit" />
+        <result property="length" column="length" />
+        <result property="height" column="height" />
+        <result property="width" column="width" />
+        <result property="volume" column="volume" />
+        <result property="grossWeight" column="gross_weight" />
+        <result property="netWeight" column="net_weight" />
+        <result property="shelfLife" column="shelf_life" />
+        <result property="isSnManaged" column="is_sn_managed" />
+        <result property="isBatchManaged" column="is_batch_managed" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="delFlag" column="del_flag" />
+    </resultMap>
+    
+    <!-- 关联查询物料列表 SQL -->
+    <select id="selectMaterialListWithCategory" resultMap="BaseMaterialResult">
+        SELECT 
+            m.id,
+            m.material_code,
+            m.material_name,
+            m.bar_code,
+            m.category_id,
+            c.category_name,
+            m.specification,
+            m.unit,
+            m.length,
+            m.height,
+            m.width,
+            m.volume,
+            m.gross_weight,
+            m.net_weight,
+            m.shelf_life,
+            m.is_sn_managed,
+            m.is_batch_managed,
+            m.create_by,
+            m.create_time,
+            m.update_by,
+            m.update_time,
+            m.del_flag
+        FROM base_material m
+        LEFT JOIN base_material_category c ON m.category_id = c.id
+        WHERE m.del_flag = '0'
+        <if test="materialCode != null and materialCode != ''">
+            AND m.material_code LIKE CONCAT('%', #{materialCode}, '%')
+        </if>
+        <if test="materialName != null and materialName != ''">
+            AND m.material_name LIKE CONCAT('%', #{materialName}, '%')
+        </if>
+        <if test="categoryId != null">
+            AND m.category_id IN (
+                SELECT id FROM base_material_category
+                WHERE id = #{categoryId}
+                OR FIND_IN_SET(#{categoryId}, ancestors)
+            )
+        </if>
+        <if test="attrName != null and attrName != '' and attrValue != null and attrValue != ''">
+            AND EXISTS (
+                SELECT 1 FROM base_material_attr_ext ext
+                WHERE ext.material_id = m.id
+                AND ext.del_flag = '0'
+                AND ext.material_attr_name = #{attrName}
+                AND ext.material_attr_value = #{attrValue}
+            )
+        </if>
+    </select>
+</mapper>

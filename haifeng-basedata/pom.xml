@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>haifeng</artifactId>
+        <groupId>com.haifeng</groupId>
+        <version>0.0.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>haifeng-basedata</artifactId>
+
+    <description>
+        basedata 基础数据模块：
+        1. 容器、容器类型
+        2. 仓库、库区、库位、工作站
+        3. 物料、物料分类、批次
+    </description>
+
+    <dependencies>
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>com.haifeng</groupId>
+            <artifactId>haifeng-common</artifactId>
+        </dependency>
+
+        <!-- system系统模块-->
+        <dependency>
+            <groupId>com.haifeng</groupId>
+            <artifactId>haifeng-system</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

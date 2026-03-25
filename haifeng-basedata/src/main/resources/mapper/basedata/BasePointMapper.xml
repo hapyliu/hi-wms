@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haifeng.basedata.mapper.BasePointMapper">
+    <!-- 如果有自定义的SQL，写在这里，大部分基础单表查询使用MyBatis-Plus自带的即可 -->
+</mapper>

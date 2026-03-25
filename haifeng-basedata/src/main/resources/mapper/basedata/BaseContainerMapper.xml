@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haifeng.basedata.mapper.BaseContainerMapper">
+    
+    <resultMap type="BaseContainer" id="BaseContainerResult">
+        <result property="id"    column="id"    />
+        <result property="containerCode"    column="container_code"    />
+        <result property="containerModelCode"    column="container_model_code"    />
+        <result property="containerModelName"    column="container_model_name"    />
+        <result property="positionType"    column="position_type"    />
+        <result property="positionCode"    column="position_code"    />
+        <result property="stationCode"    column="station_code"    />
+        <result property="taskCode"    column="task_code"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBaseContainerVo">
+        select bc.id, bc.container_code, bc.container_model_code, bcm.container_model_name, bc.position_type, bc.position_code, bc.station_code, bc.task_code, bc.status, bc.del_flag, bc.create_by, bc.create_time, bc.update_by, bc.update_time
+        from base_container bc
+        left join base_container_model bcm on bc.container_model_code = bcm.container_model_code and bcm.del_flag = '0'
+    </sql>
+
+    <select id="selectBaseContainerList" parameterType="BaseContainer" resultMap="BaseContainerResult">
+        <include refid="selectBaseContainerVo"/>
+        <where>
+            and bc.del_flag = '0'
+            <if test="containerCode != null  and containerCode != ''"> and bc.container_code like concat('%', #{containerCode}, '%')</if>
+            <if test="containerModelCode != null  and containerModelCode != ''"> and bc.container_model_code = #{containerModelCode}</if>
+            <if test="positionType != null  and positionType != ''"> and bc.position_type = #{positionType}</if>
+            <if test="positionCode != null  and positionCode != ''"> and bc.position_code like concat('%', #{positionCode}, '%')</if>
+            <if test="stationCode != null  and stationCode != ''"> and bc.station_code = #{stationCode}</if>
+            <if test="taskCode != null  and taskCode != ''"> and bc.task_code like concat('%',#{taskCode}, '%')</if>
+            <if test="status != null  and status != ''"> and bc.status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaseContainerById" parameterType="Long" resultMap="BaseContainerResult">
+        <include refid="selectBaseContainerVo"/>
+        where bc.id = #{id} and bc.del_flag = '0'
+    </select>
+
+    <insert id="insertBaseContainer" parameterType="BaseContainer" useGeneratedKeys="true" keyProperty="id">
+        insert into base_container
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="containerCode != null">container_code,</if>
+            <if test="containerModelCode != null">container_model_code,</if>
+            <if test="positionType != null">position_type,</if>
+            <if test="positionCode != null">position_code,</if>
+            <if test="stationCode != null">station_code,</if>
+            <if test="taskCode != null">task_code,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="containerCode != null">#{containerCode},</if>
+            <if test="containerModelCode != null">#{containerModelCode},</if>
+            <if test="positionType != null">#{positionType},</if>
+            <if test="positionCode != null">#{positionCode},</if>
+            <if test="stationCode != null">#{stationCode},</if>
+            <if test="taskCode != null">#{taskCode},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaseContainer" parameterType="BaseContainer">
+        update base_container
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="containerCode != null">container_code = #{containerCode},</if>
+            <if test="containerModelCode != null">container_model_code = #{containerModelCode},</if>
+            <if test="positionType != null">position_type = #{positionType},</if>
+            <if test="positionCode != null">position_code = #{positionCode},</if>
+            <if test="stationCode != null">station_code = #{stationCode},</if>
+            <if test="taskCode != null">task_code = #{taskCode},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id} and del_flag = '0'
+    </update>
+
+    <delete id="deleteBaseContainerById" parameterType="Long">
+        update base_container set del_flag = '2' where id = #{id}
+    </delete>
+
+    <delete id="deleteBaseContainerByIds" parameterType="String">
+        update base_container set del_flag = '2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据容器编号列表查询容器 -->
+    <select id="selectBaseContainerListByCodes" resultMap="BaseContainerResult">
+        <include refid="selectBaseContainerVo"/>
+        where bc.container_code in
+        <foreach item="containerCode" collection="list" open="(" separator="," close=")">
+            #{containerCode}
+        </foreach>
+        and bc.del_flag = '0'
+    </select>
+
+    <!-- 批量新增容器 -->
+    <insert id="batchInsertBaseContainer" parameterType="java.util.List">
+        insert into base_container
+        (container_code, container_model_code, create_by, update_by)
+        values
+        <foreach item="container" collection="list" separator=",">
+        (
+         #{container.containerCode},
+         #{container.containerModelCode},
+         #{container.createBy},
+         #{container.updateBy}
+        )
+        </foreach>
+    </insert>
+
+    <select id="selectBaseContainerByCode" resultType="com.haifeng.basedata.domain.BaseContainer">
+        <include refid="selectBaseContainerVo"/>
+        where bc.container_code = #{containerCode} and bc.del_flag = '0'
+    </select>
+
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haifeng.basedata.mapper.BasePointStationMapper">
+    
+    <resultMap type="com.haifeng.basedata.domain.BasePointStation" id="BasePointStationResult">
+        <result property="stationId"    column="station_id"    />
+        <result property="pointId"    column="point_id"    />
+    </resultMap>
+    <select id="selectStationCodeByPointId" resultType="com.haifeng.basedata.domain.BasePointStation">
+        select station_code,id as stationId from base_station where id = (select station_id from base_point_station where point_id = #{pointId})
+
+    </select>
+
+</mapper>

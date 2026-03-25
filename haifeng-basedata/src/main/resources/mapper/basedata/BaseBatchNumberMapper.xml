@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haifeng.basedata.mapper.BaseBatchNumberMapper">
+
+    <resultMap id="BaseResultMap" type="com.haifeng.basedata.domain.BaseBatchNumber">
+            <id property="id" column="id" />
+            <result property="batchNumber" column="batch_number" />
+            <result property="batchAttribute1" column="batch_attribute1" />
+            <result property="batchAttribute2" column="batch_attribute2" />
+            <result property="batchAttribute3" column="batch_attribute3" />
+            <result property="batchAttribute4" column="batch_attribute4" />
+            <result property="batchAttribute5" column="batch_attribute5" />
+            <result property="batchAttribute6" column="batch_attribute6" />
+            <result property="batchAttribute7" column="batch_attribute7" />
+            <result property="batchAttribute8" column="batch_attribute8" />
+            <result property="batchAttribute9" column="batch_attribute9" />
+            <result property="batchAttribute10" column="batch_attribute10" />
+            <result property="batchAttribute11" column="batch_attribute11" />
+            <result property="batchAttribute12" column="batch_attribute12" />
+            <result property="batchAttribute13" column="batch_attribute13" />
+            <result property="batchAttribute14" column="batch_attribute14" />
+            <result property="batchAttribute15" column="batch_attribute15" />
+            <result property="delFlag" column="del_flag" />
+            <result property="createBy" column="create_by" />
+            <result property="createTime" column="create_time" />
+            <result property="updateBy" column="update_by" />
+            <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,batch_number,batch_attribute1,batch_attribute2,batch_attribute3,batch_attribute4,
+        batch_attribute5,batch_attribute6,batch_attribute7,batch_attribute8,batch_attribute9,
+        batch_attribute10,batch_attribute11,batch_attribute12,batch_attribute13,batch_attribute14,
+        batch_attribute15,del_flag,create_by,create_time,update_by,
+        update_time
+    </sql>
+</mapper>

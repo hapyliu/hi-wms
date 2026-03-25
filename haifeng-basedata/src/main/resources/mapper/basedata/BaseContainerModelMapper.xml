@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haifeng.basedata.mapper.BaseContainerModelMapper">
+
+    <resultMap id="BaseResultMap" type="com.haifeng.basedata.domain.BaseContainerModel">
+            <id property="id" column="id" />
+            <result property="containerModelCode" column="container_model_code" />
+            <result property="containerModelName" column="container_model_name" />
+            <result property="containerBasicType" column="container_basic_type" />
+            <result property="length" column="length" />
+            <result property="width" column="width" />
+            <result property="height" column="height" />
+            <result property="shelfFaceCount" column="shelf_face_count" />
+            <result property="shelfFace" column="shelf_face" />
+            <result property="gridFloorCount" column="grid_floor_count" />
+            <result property="singleGridCount" column="single_grid_count" />
+            <result property="delFlag" column="del_flag" />
+            <result property="createBy" column="create_by" />
+            <result property="createTime" column="create_time" />
+            <result property="updateBy" column="update_by" />
+            <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,container_model_code,container_model_name,container_basic_type,length,width,
+        height,shelf_face_count,shelf_face,grid_floor_count,single_grid_count,
+        del_flag,create_by,create_time,update_by,update_time
+    </sql>
+</mapper>
